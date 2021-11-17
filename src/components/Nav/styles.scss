@@ -1,0 +1,26 @@
+.navContainer {
+  font-size: 28px;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: #1db81db4;
+  width: 100%;
+  position: fixed;
+  top: 0px;
+  height: 50px;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.list {
+  display: block;
+  color: #ffffff;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+.list:hover {
+  background-color: darkblue;
+}
