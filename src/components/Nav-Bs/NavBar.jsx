@@ -1,4 +1,5 @@
 import React from "react";
+import CartWidget from "../CartWidget/CartWidget";
 
 const NavBar = () => {
   return (
@@ -36,6 +37,9 @@ const NavBar = () => {
               <a className="nav-link" href="/#">
                 Mothers
               </a>
+              <div className=" position-absolute end-0">
+                <CartWidget/>
+              </div>
             </div>
           </div>
         </div>

@@ -1,5 +1,7 @@
 //import logo from './logo.svg';
 import './App.css';
+import CartWidget from './components/CartWidget/CartWidget';
+import ItemListContainer from './components/ItemListContainer/ItemListContainer';
 import NavBar from './components/Nav-Bs/NavBar';
 
 
@@ -21,6 +23,8 @@ function App() {
         </a>
       </header> */}
       <NavBar/>
+      <ItemListContainer/>
+      
       
     </div>
   );
