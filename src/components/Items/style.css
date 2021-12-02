@@ -1,0 +1,18 @@
+
+.imgProducto{
+    width: 100%;
+    display: block;
+    margin: 0 auto;
+    margin-bottom: 20px;
+}
+
+
+.precio{
+    display: flex;
+    flex-flow: nowrap column;
+    align-items: center;
+    -webkit-box-pack: justify;
+    justify-content: space-between;
+    padding-left: 10px;
+    padding-top: 10px;
+}
