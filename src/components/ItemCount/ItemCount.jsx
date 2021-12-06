@@ -24,13 +24,12 @@ const ItemCount = ({stock}) => {
     return (
       <Card>
         <Card.Content>
-          <h1>Item</h1>
           <h2>{contador}</h2>
         </Card.Content>
         <Card.Content extra>
           <div className='ui two buttons'>
-            <Button onClick={plusClick} basic color='green'><Icon name='plus circle' /></Button>
-            <Button onClick={minusClick} basic color='red'><Icon name='minus circle' /></Button>
+            <Button onClick={plusClick}><Icon name='plus'/></Button>
+            <Button onClick={minusClick}><Icon name='minus'/></Button>
           </div>
         </Card.Content>
       </Card>

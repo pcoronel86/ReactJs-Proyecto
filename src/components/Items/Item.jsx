@@ -9,9 +9,8 @@ const Item = ({product}) => {
                 <div className="productoCompra">
                     <button className="btn btn-success ml-auto comprarButton" type="button" data-toggle="modal"
                         data-target="#comprarModal">Ver Detalle</button>
-                    <p className="precio">{product.price}</p>
+                    <p className="precio">${product.price}</p>
                 </div>
-            <p class="productoId">Stock: {product.stock}</p>
         </div>
     )
 }

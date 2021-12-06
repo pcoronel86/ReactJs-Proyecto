@@ -3,6 +3,7 @@ import './App.css';
 import ItemListContainer from './Containers/ItemListContainer/ItemListContainer';
 import NavBar from './components/Nav-Bs/NavBar';
 import 'semantic-ui-css/semantic.min.css'
+import ItemDetailContainer from './Containers/ItemDetailContainer/ItemDetailContainer';
 
 
 function App() {
@@ -11,6 +12,7 @@ function App() {
   
       <NavBar/>
       <ItemListContainer/>
+      <ItemDetailContainer/>
       
     </div>
   );
