@@ -1,42 +1,31 @@
 import React from "react";
+import './NavBar.css'
+import { useState, useEffect } from 'react'
 import CartWidget from "../CartWidget/CartWidget";
+import { Link } from 'react-router-dom'
+import { getCategories } from '../../products'
 
 const NavBar = () => {
+  const [categories, setCategories] = useState([])
+
+  useEffect(() => {
+    getCategories().then(categories=>{
+      setCategories(categories)
+    })
+  }, [])
+
   return (
     <div>
       <nav className="navbar navbar-expand-lg navbar-dark bg-primary">
         <div className="container-fluid">
-          <a className="navbar-brand" href="/#">
-            NavBar
-          </a>
-          <button
-            className="navbar-toggler"
-            type="button"
-            data-bs-toggle="collapse"
-            data-bs-target="#navbarNavAltMarkup"
-            aria-controls="navbarNavAltMarkup"
-            aria-expanded="false"
-            aria-label="Toggle navigation"
-          >
-            <span className="navbar-toggler-icon"></span>
-          </button>
           <div className="collapse navbar-collapse" id="navbarNavAltMarkup">
             <div className="navbar-nav">
-              <a className="nav-link active" aria-current="page" href="/#">
-                INICIO
-              </a>
-              <a className="nav-link" href="/#">
-                Microprocesadores
-              </a>
-              <a className="nav-link" href="/#">
-                Placas de video
-              </a>
-              <a className="nav-link" href="/#">
-                Memorias Ram
-              </a>
-              <a className="nav-link" href="/#">
-                Mothers
-              </a>
+              <div>
+                <Link to={'/'}><h3>CompuNor</h3></Link>
+              </div>
+              <div className="Categories">
+                {categories.map(cat => <Link key={cat.id} className='Option' to={`/category/${cat.id}`}>{cat.description}</Link>)}
+              </div>
               <div className=" position-absolute end-0">
                 <CartWidget/>
               </div>

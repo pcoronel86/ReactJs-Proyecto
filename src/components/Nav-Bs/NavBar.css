@@ -1,0 +1,30 @@
+.Categories {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+  }
+  
+  .Option {
+    /* color: #8C30F5; */
+    text-decoration: none;
+    border-radius: 10;
+    margin: 0 50px;
+    /* TODO */
+    width: auto;
+    padding: 10px;
+    background: blue;
+    border-radius: 25px;
+    order: 1;
+    align-self: center;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+    color: #FFFFFF;
+    border: none;
+    border-style: none;
+    cursor: pointer;
+    outline: inherit;
+  }
+  h3{
+    color: #FFFFFF;
+  }

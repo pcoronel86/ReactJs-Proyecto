@@ -2,20 +2,23 @@ import React from 'react'
 import './ItemDetailContainer.css'
 import { useState, useEffect } from 'react/cjs/react.development'
 import ItemDetail from '../../components/ItemDetail/ItemDetail'
-import { getItem } from '../../products'
+import { getProductById } from '../../products'
+import { useParams } from 'react-router'
 
 const ItemDetailContainer = () => {
-    const [item, setItem] = useState([])
-
+    const [product, setProduct] = useState([])
+    const {paramId}= useParams()
+    
     useEffect(()=>{
-        const list = getItem()
-        list.then(list => {
-            setItem(list)
+        getProductById(paramId).then(item=>{
+            setProduct(item)
+        }).catch(err =>{
+            console.log(err)
         })
         return (()=>{
-            setItem([])
+            setProduct([])
         })
-    },[])
+    },[paramId])
 
 
 
@@ -23,7 +26,7 @@ const ItemDetailContainer = () => {
         <div>
             <h2>Item Detail Container</h2>
             <div className="itemDetailContainer">
-                <ItemDetail item={item}/>
+                <ItemDetail product={product}/>
             </div>
         </div>
     )
