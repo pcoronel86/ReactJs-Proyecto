@@ -1,20 +1,16 @@
 import React, { useState } from 'react'
-import FinalizePurchase from '../FinalizePurchase/FinalizePurchase'
+import { Link } from 'react-router-dom';
 import ItemCount from '../ItemCount/ItemCount'
 import './ItemDetail.css'
 
 const ItemDetail = ({product}) => {
+    const [quantity, setQuantity] = useState(0)
     
-    let [amount, setAmount] = useState(0);
-    
-    const addToCart = (contador) =>{
-       console.log(contador)
-        setAmount(amount=contador)
-        console.log(amount)
-        console.log(amount)
-
+    const addToCart=(count) =>{
+        
+        console.log('success', `Agregado al Carrito ${count}`)
+        setQuantity(count)
     }
-    
     
 
     return (
@@ -27,7 +23,12 @@ const ItemDetail = ({product}) => {
                     <p className="description">{product?.description}</p>
                     <p>Cantidad Disponibles: {product?.stock}</p>
                     <div className="itemCount">
-                    {amount === 0 ? <ItemCount onConfirm={addToCart} stock={product?.stock}/> : <FinalizePurchase/>}
+                        {quantity === 0 ?
+                            <ItemCount initial={1} stock={product?.stock} onAdd = {addToCart} />
+                            :
+                            <Link to = '/cart' className="btn btn-success ml-auto comprarButton" type="button" data-toggle="modal" data-target="#comprarModal"
+                            > Ir al Carrito </Link>
+                        }
                     </div>
                 </div>
         </div>
