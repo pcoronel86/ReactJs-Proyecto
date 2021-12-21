@@ -27,7 +27,7 @@ const NavBar = () => {
                 {categories.map(cat => <Link key={cat.id} className='Option' to={`/category/${cat.id}`}>{cat.description}</Link>)}
               </div>
               <div className=" position-absolute end-0">
-                <CartWidget/>
+                <Link to = "/cart"><CartWidget/></Link>
               </div>
             </div>
           </div>
