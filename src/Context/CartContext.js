@@ -14,39 +14,51 @@ const CartContextProvider = ({children}) => {
         })
         return subTotal;
     }
+    const obtenerTotal=()=>{
+        let total = 0
+        cart.forEach(elemento => {
+            total += (elemento.cantidad * elemento.item.price)
+        })
+        return total;
+    }    
 
-    const addItem = (producto, quantity) => {
-        const flag = isInCart(producto);
-        console.log(flag);
+    const addItem = (product, quantity) => {
+        const flag = isInCart(product);
+        console.log(flag); 
         if (flag) {
-            let productoRepetido = cart.find (elemento => elemento.item === producto);
+            let productoRepetido = cart.find (elemento => elemento.item === product);
             productoRepetido.cantidad += quantity;
-            let cartSinRepetido = cart.filter (elemento => elemento.item !== producto);
+            let cartSinRepetido = cart.filter (elemento => elemento.item !== product);
             setCart([...cartSinRepetido, productoRepetido]);
         } else {
-            setCart([...cart, {item: producto, cantidad: quantity}]);
-        }
+            setCart([...cart, {item: product, cantidad: quantity}]);
+        } 
+        console.log (cart)
        
     }
 
     const isInCart = (item) => {
-        
         return cart.some(producto =>  producto.item === item );
     }
 
-    const removeItem = (item) => {
-
+    const removeItem = (id) => {
+        console.log(id)
+        let newCart = cart.splice(
+            cart.findIndex(elemento=> elemento.id === id),
+            1
+        );
+        setCart([...newCart])
     }
 
-    const cleanCart = () => {
-
+    const cleanCart = (id) => {
+        setCart(cart.filter(item=>item.id !==id))
     }
 
 
     return(
         <CartContext.Provider value = {{
             cart,
-            addItem, removeItem, cleanCart, getCantidad
+            addItem, removeItem, cleanCart, getCantidad, obtenerTotal
         }}>
             {children}
         </CartContext.Provider>

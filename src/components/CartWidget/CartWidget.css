@@ -22,3 +22,6 @@
     width: 45px;
     height: 40px;
 }
+.display{
+    display:none !important;
+}

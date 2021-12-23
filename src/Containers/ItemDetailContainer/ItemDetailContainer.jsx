@@ -7,11 +7,13 @@ import { useParams } from 'react-router'
 
 const ItemDetailContainer = () => {
     const [product, setProduct] = useState({})
+    const [loading, setLoading] = useState (true)
     const {paramId}= useParams()
     
     useEffect(()=>{
         getProductById(paramId).then(item=>{
             setProduct(item)
+            setLoading(false)
         }).catch(err =>{
             console.log(err)
         })
@@ -24,9 +26,8 @@ const ItemDetailContainer = () => {
 
     return (
         <div>
-            <h2>Item Detail Container</h2>
             <div className="itemDetailContainer">
-                <ItemDetail product={product}/>
+                {loading ? <h1>LOADING</h1> : <ItemDetail product={product}/>}
             </div>
         </div>
     )
