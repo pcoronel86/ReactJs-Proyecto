@@ -10,7 +10,7 @@ const Item = ({product}) => {
             <img className="imgProducto" src={product.pictureURL}  alt={product.pictureURL}/>
                 <div className="productoCompra">    
                 <Link className="btn btn-success ml-auto comprarButton" type="button" data-toggle="modal"
-                        data-target="#comprarModal" to={`/item/${product.id}`}>Ver Detalle</Link>
+                        data-target="#comprarModal" to={`/detail/${product.id}`}>Ver Detalle</Link>
                     <p className="precio">${product.price}</p>
                 </div>
         </div>

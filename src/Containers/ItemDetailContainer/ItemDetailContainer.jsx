@@ -1,9 +1,11 @@
 import React from 'react'
 import './ItemDetailContainer.css'
-import { useState, useEffect } from 'react/cjs/react.development'
+import { useState, useEffect } from 'react'
 import ItemDetail from '../../components/ItemDetail/ItemDetail'
-import { getProductById } from '../../products'
-import { useParams } from 'react-router'
+import { useParams } from 'react-router-dom'
+import { getDoc, doc } from 'firebase/firestore'
+import { db } from '../../sevices/firebase/firebase'
+
 
 const ItemDetailContainer = () => {
     const [product, setProduct] = useState({})
@@ -11,11 +13,14 @@ const ItemDetailContainer = () => {
     const {paramId}= useParams()
     
     useEffect(()=>{
-        getProductById(paramId).then(item=>{
-            setProduct(item)
+        setLoading(true)
+        getDoc(doc(db, 'items', paramId)).then((querySnapshot) => {
+            const product = { id: querySnapshot.id, ...querySnapshot.data()}
+            setProduct(product)
+        }).catch((error)=>{
+            console.log('Error searching item', error)
+        }).finally(()=> {
             setLoading(false)
-        }).catch(err =>{
-            console.log(err)
         })
         return (()=>{
             setProduct([])
