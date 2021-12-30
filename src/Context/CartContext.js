@@ -2,67 +2,72 @@ import React, { createContext, useState } from "react";
 
 export const CartContext = createContext();
 
-const CartContextProvider = ({children}) => {
+const CartContextProvider = ({ children }) => {
+  const [products, setProducts] = useState([]);
 
-    const [cart, setCart] = useState([]);
+  const getCantidad = () => {
+    let subTotal = 0;
+    products.forEach((elemento) => {
+      subTotal += elemento.cantidad;
+    });
+    return subTotal;
+  };
+  const obtenerTotal = () => {
+    let total = 0;
+    products.forEach((elemento) => {
+      total += elemento.cantidad * elemento.item.price;
+    });
+    return total;
+  };
 
-    const getCantidad = () => {
-        let subTotal = 0;
-        cart.forEach(elemento=> {
-            
-            subTotal += elemento.cantidad
-        })
-        return subTotal;
+  const addItem = (product, quantity) => {
+    const flag = isInCart(product);
+    console.log(flag);
+    if (flag) {
+      let productRepetido = products.find((elemento) => elemento.item === product);
+      productRepetido.cantidad += quantity;
+      let cartSinRepetido = products.filter(
+        (elemento) => elemento.item !== product
+      );
+      setProducts([...cartSinRepetido, productRepetido]);
+    } else {
+        setProducts([...products, { item: product, cantidad: quantity }]);
     }
-    const obtenerTotal=()=>{
-        let total = 0
-        cart.forEach(elemento => {
-            total += (elemento.cantidad * elemento.item.price)
-        })
-        return total;
-    }    
+    console.log(products);
+  };
 
-    const addItem = (product, quantity) => {
-        const flag = isInCart(product);
-        console.log(flag); 
-        if (flag) {
-            let productoRepetido = cart.find (elemento => elemento.item === product);
-            productoRepetido.cantidad += quantity;
-            let cartSinRepetido = cart.filter (elemento => elemento.item !== product);
-            setCart([...cartSinRepetido, productoRepetido]);
-        } else {
-            setCart([...cart, {item: product, cantidad: quantity}]);
-        } 
-        console.log (cart)
-       
-    }
+  const isInCart = (item) => {
+    console.log(item);
+    return products.some((product) => product.item === item);
+  };
 
-    const isInCart = (item) => {
-        return cart.some(producto =>  producto.item === item );
-    }
+  const removeItem = (id) => {
+    console.log(id);
+    let newCart = products.splice(
+        products.findIndex((elemento) => elemento.id === id),
+      1
+    );
+    setProducts([...newCart]);
+  };
 
-    const removeItem = (id) => {
-        console.log(id)
-        let newCart = cart.splice(
-            cart.findIndex(elemento=> elemento.id === id),
-            1
-        );
-        setCart([...newCart])
-    }
+  const cleanCart = (id) => {
+    setProducts(products.filter((item) => item.id !== id));
+  };
 
-    const cleanCart = (id) => {
-        setCart(cart.filter(item=>item.id !==id))
-    }
-
-
-    return(
-        <CartContext.Provider value = {{
-            cart,
-            addItem, removeItem, cleanCart, getCantidad, obtenerTotal
-        }}>
-            {children}
-        </CartContext.Provider>
-    )
-}
+  return (
+    <CartContext.Provider
+      value={{
+        products,
+        addItem,
+        removeItem,
+        cleanCart,
+        getCantidad,
+        obtenerTotal,
+      }}
+    >
+      {children}
+    </CartContext.Provider>
+  );
+};
 
 export default CartContextProvider;
