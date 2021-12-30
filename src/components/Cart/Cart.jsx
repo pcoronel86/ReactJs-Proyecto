@@ -1,4 +1,4 @@
-import { useContext, useRef, useState } from "react";
+import { useContext, useState } from "react";
 import { Icon } from "semantic-ui-react";
 import { CartContext } from "../../Context/CartContext";
 import { Link } from "react-router-dom";
@@ -18,7 +18,6 @@ const Cart = () => {
   const { products } = useContext(CartContext);
   const { removeItem } = useContext(CartContext);
   const { cleanCart } = useContext(CartContext);
-  const contactFormRef = useRef ()
 
   const confirmOrder = () => {
     setProcessingOrder(true)
@@ -36,7 +35,7 @@ const Cart = () => {
     const outOfStock = []
 
     objOrder.items.forEach((prod) => {
-        getDoc(doc(db, 'items'), prod.item.id).then((docSnap)=>{
+        getDoc(doc(db, 'items', prod.item.id)).then((docSnap)=>{
           if(docSnap.data().stock >= prod.cantidad){
             batch.update(doc(db, 'items', docSnap.id),{
               stock : docSnap.data().stock - prod.cantidad
@@ -51,9 +50,11 @@ const Cart = () => {
       addDoc(collection(db, 'orders'), objOrder).then(({id}) =>{
         batch.commit().then(() => {
           console.log(id)
+          console.log('Su id de compra es:',id)
+          
         }) 
       }).catch((error) =>{
-        
+        console.log("Error ejecutando la order", error);
       })
     }
       
@@ -64,6 +65,11 @@ const Cart = () => {
     }, 1000)
   }
   
+  if(processingOrder){
+    return <h1>Se Esta Procesando su Orden</h1>
+       
+  }
+
   const removeAll = () => {
     cleanCart();
   };
