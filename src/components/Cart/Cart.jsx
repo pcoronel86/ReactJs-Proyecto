@@ -1,6 +1,8 @@
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import { Icon } from "semantic-ui-react";
+import './Cart.css'
 import { CartContext } from "../../Context/CartContext";
+import UserContext from '../../Context/userContext'
 import { Link } from "react-router-dom";
 import { addDoc, collection, Timestamp, doc, writeBatch, getDoc} from 'firebase/firestore'
 import { db } from "../../sevices/firebase/firebase";
@@ -8,26 +10,33 @@ import { db } from "../../sevices/firebase/firebase";
 
 
 const Cart = () => {
+  const [usuario, setusuario] = useState()
   const [processingOrder, setProcessingOrder] = useState(false)
-  const [contact, setContact] = useState({
-    name:'',
-    phone:'',
-    address:'',
-  })
   const { obtenerTotal } = useContext(CartContext);
-  const { products } = useContext(CartContext);
+  const { cart } = useContext(CartContext);
+  const {user} = useContext(UserContext)
   const { removeItem } = useContext(CartContext);
   const { cleanCart } = useContext(CartContext);
 
+  useEffect(()=>{
+    const loggedUserJSON = window.localStorage.getItem('user')
+    console.log(loggedUserJSON)
+    if(loggedUserJSON){
+      const objUser = JSON.parse(loggedUserJSON)
+      setusuario(objUser)
+    }
+  },[])
+  
   const confirmOrder = () => {
     setProcessingOrder(true)
 
     const objOrder = {
-        buyer: contact.name,
-        items: products,
+        buyer: usuario.username,
+        items: cart,
         total: obtenerTotal(),
-        phone: contact.phone,
-        address: contact.address, 
+        phone: usuario.userphone,
+        mail: usuario.usermail,
+        address: usuario.useraddress,
         date: Timestamp.fromDate(new Date())
     }
 
@@ -74,6 +83,7 @@ const Cart = () => {
     cleanCart();
   };
 
+  
   return (
     <div>
     {obtenerTotal() === 0 ? (
@@ -103,9 +113,9 @@ const Cart = () => {
           </tr>
         </thead>
         <tbody>
-          {products.map((product) => {
+          {cart.map((product) => {
             return (
-              <tr>
+              <tr key={product.item.id}>
                 <td>
                   <img src={product.item.pictureURL} alt="" />
                 </td>
@@ -135,7 +145,8 @@ const Cart = () => {
           >
             Remove All
           </button>
-          <button
+          {
+            user ? <button
             className="btn btn-success ml-auto comprarButton"
             type="button"
             data-toggle="modal"
@@ -143,18 +154,20 @@ const Cart = () => {
             onClick={()=>confirmOrder()}
           >
             Confirmar Compra
-          </button>
+          </button>:<h4>Registrate</h4>}
+            
         </div>
-            <div>
-              <h4>Nombre: {contact.name}</h4>
-              <h4>Telefono: {contact.phone}</h4>
-              <h4>Direccion: {contact.address}</h4>
-              <button onClick={() => setContact({name:'', phone:'', address:'', comment:''})}>Agregar Contacto</button>
-            </div>
+        {usuario ? <div>
+          <h4>Nombre: {usuario.username}</h4>
+          <h4>Telefono: {usuario.userphone}</h4>
+          <h4>Direccion: {usuario.useraddress}</h4>
+          <h4>mail: {usuario.usermail}</h4>
+        </div>: <div><h4>no hay usuario logueado</h4></div>}
             
       </table>
     )}
   </div>
+  
   )
 };
 

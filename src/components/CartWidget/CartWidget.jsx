@@ -9,13 +9,10 @@ const CartWidget = () => {
     
     return(
         <div>
-            {getCantidad() === 0 ?
-            <div className="display"></div>
-            :
             <button className="CartWidget">
                 <img src="/images/icons8-carrito-de-compras-48.png" alt='cart' className='CartImg'/>
                 {getCantidad()}
-            </button>}
+            </button>
         </div>
     )
 }
