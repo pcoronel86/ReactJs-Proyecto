@@ -19,7 +19,7 @@ const ItemDetail = ({ product }) => {
   };
 
   return (
-    <div className="itemDetail">
+    <div className="itemDetail position-absolute top-50 start-50 translate-middle">
       <img
         className="imgitem"
         src={product.pictureURL}

@@ -3,8 +3,7 @@ import "./styles.css";
 import ItemList from "../../components/ItemList/ItemList";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { db } from "../../sevices/firebase/firebase";
-import { collection, getDocs, query, where } from "firebase/firestore";
+import { getProducts } from '../../sevices/firebase/firebase'
 
 const ItemListContainer = () => {
   const [products, setProducts] = useState([]);
@@ -12,39 +11,14 @@ const ItemListContainer = () => {
   const { categoryId } = useParams();
 
   useEffect(() => {
-    if (!categoryId) {
-      setLoading(true);
-      getDocs(collection(db, "items"))
-        .then((querySnapshot) => {
-          const products = querySnapshot.docs.map((doc) => {
-            return { id: doc.id, ...doc.data() };
-          });
-          setProducts(products);
-        })
-        .catch((error) => {
-          console.log("Error searching items", error);
-        })
-        .finally(() => {
-          setLoading(false);
-        });
-    } else {
-      setLoading(true);
-      getDocs(
-        query(collection(db, "items"), where("category", "==", categoryId))
-      )
-        .then((querySnapshot) => {
-          const products = querySnapshot.docs.map((doc) => {
-            return { id: doc.id, ...doc.data() };
-          });
-          setProducts(products);
-        })
-        .catch((error) => {
-          console.log("Error searching items", error);
-        })
-        .finally(() => {
-          setLoading(false);
-        });
-    }
+    setLoading(true)
+    getProducts('category', '==', categoryId).then(products=>{
+      setProducts(products)
+    }).catch(error =>{
+      console.log(error)
+    }).finally(()=>{
+      setLoading(false)
+    })
     return () => {
       setProducts([]);
     };

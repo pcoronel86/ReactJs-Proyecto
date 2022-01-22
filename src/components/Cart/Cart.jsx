@@ -1,42 +1,36 @@
-import { useContext, useState, useEffect } from "react";
+import { useContext, useState, useRef } from "react";
 import { Icon } from "semantic-ui-react";
 import './Cart.css'
+import Togglable from '../TogglaBle/Togglable';
 import { CartContext } from "../../Context/CartContext";
-import UserContext from '../../Context/userContext'
 import { Link } from "react-router-dom";
 import { addDoc, collection, Timestamp, doc, writeBatch, getDoc} from 'firebase/firestore'
 import { db } from "../../sevices/firebase/firebase";
+import ContactForm from "../ContactForm/ContactForm";
 
 
 
 const Cart = () => {
-  const [usuario, setusuario] = useState()
   const [processingOrder, setProcessingOrder] = useState(false)
-  const { obtenerTotal } = useContext(CartContext);
-  const { cart } = useContext(CartContext);
-  const {user} = useContext(UserContext)
-  const { removeItem } = useContext(CartContext);
-  const { cleanCart } = useContext(CartContext);
+  const [contact, setContact] = useState({
+    name:"",
+    phone: "",
+    address: "",
+    email: "",
+  });
+  const { cleanCart, removeItem, obtenerTotal, cart } = useContext(CartContext);
+  const contactFormRef = useRef();
 
-  useEffect(()=>{
-    const loggedUserJSON = window.localStorage.getItem('user')
-    console.log(loggedUserJSON)
-    if(loggedUserJSON){
-      const objUser = JSON.parse(loggedUserJSON)
-      setusuario(objUser)
-    }
-  },[])
-  
   const confirmOrder = () => {
     setProcessingOrder(true)
 
     const objOrder = {
-        buyer: usuario.username,
+        buyer: contact.name,
         items: cart,
         total: obtenerTotal(),
-        phone: usuario.userphone,
-        mail: usuario.usermail,
-        address: usuario.useraddress,
+        phone: contact.phone,
+        mail: contact.email,
+        address: contact.address,
         date: Timestamp.fromDate(new Date())
     }
 
@@ -65,13 +59,11 @@ const Cart = () => {
       }).catch((error) =>{
         console.log("Error ejecutando la order", error);
       })
+      .finally(()=>{
+        setProcessingOrder(false);
+        cleanCart()
+      })
     }
-      
-
-    setTimeout(() =>{
-      cleanCart()
-      setProcessingOrder(false)
-    }, 1000)
   }
   
   if(processingOrder){
@@ -108,35 +100,44 @@ const Cart = () => {
           <tr>
             <th scope="col">Foto</th>
             <th scope="col">Nombre</th>
+            <th scope="col">Descripcion</th>
             <th scope="col">Cantidad</th>
             <th scope="col">Precio Unidad</th>
           </tr>
         </thead>
         <tbody>
-          {cart.map((product) => {
+          {!processingOrder && cart.length > 0 
+          ? cart.map((product) => {
             return (
-              <tr key={product.item.id}>
+              <tr key={product?.item.id}>
                 <td>
-                  <img src={product.item.pictureURL} alt="" />
+                  <img src={product?.item.pictureURL} alt="" />
                 </td>
-                <td> {product.item.title} </td>
-                <td> {product.cantidad} </td>
-                <td>{product.item.price}</td>
-                <button
-                  color="red"
-                  onClick={(handleRemove) => removeItem(product.item.id)}
+                <td> {product?.item.title} </td>
+                <td> {product?.item.description} </td>
+                <td> {product?.cantidad} </td>
+                <td>{product?.item.price}</td>
+                <td
+                  className="btn btn-success ml-auto comprarButton bg-danger"
+                  type="button"
+                  data-toggle="modal"
+                  data-target="#comprarModal"
+                  onClick={(handleRemove) => removeItem(product?.item.id)}
                 >
                   <Icon name="trash" />
-                </button>
+                </td>
               </tr>
             );
-          })}
-        </tbody>
-        <div>
-          <h1>TOTAL:${obtenerTotal()}</h1>
+          }):"procesando Orden"}
+        </tbody>    
+      </table>
+    )}
+    <div>
+          {cart.length > 0 && !processingOrder && <h1>TOTAL:${obtenerTotal()}</h1>}
         </div>
         <div>
-          <button
+          {!processingOrder && cart.length > 0 && (
+            <button
             className="btn btn-success ml-auto comprarButton"
             type="button"
             data-toggle="modal"
@@ -145,8 +146,9 @@ const Cart = () => {
           >
             Remove All
           </button>
-          {
-            user ? <button
+          )}
+          {!processingOrder && cart.length > 0 && (
+            <button
             className="btn btn-success ml-auto comprarButton"
             type="button"
             data-toggle="modal"
@@ -154,19 +156,51 @@ const Cart = () => {
             onClick={()=>confirmOrder()}
           >
             Confirmar Compra
-          </button>:<h4>Registrate</h4>}
-            
+          </button>
+          )}
+          {!processingOrder &&
+           contact.name !== "" &&
+           contact.phone !== "" &&
+           contact.address !== "" &&
+           contact.email !== "" && (
+          <div>
+            <h4>Nombre: {contact.address}</h4>
+            <h4>Telefono: {contact.phone}</h4>
+            <h4>Direccion: {contact.address}</h4>
+            <h4>Email: {contact.email}</h4>
+            <button
+              onClick={() =>
+                setContact({ name :"" ,phone: "", address: "", email: "" })
+              }
+              className="Button"
+              style={{ backgroundColor: "#db4025" }}
+            >
+              Borrar datos de contacto
+            </button>
+          </div>
+           )}
+           {(!processingOrder && cart.length) > 0 &&(
+             <Togglable
+                buttonLabelShow={
+                  contact.name !== "" &&
+                  contact.phone !== "" &&
+                  contact.address !== "" &&
+                  contact.email !== ""
+                    ? "Editar contacto"
+                    : "Agregar contacto"
+                }
+                ref={contactFormRef}
+              >
+                <ContactForm
+                  toggleVisibility={contactFormRef}
+                  setContact={setContact}
+                />
+              </Togglable>
+           )}     
         </div>
-        {usuario ? <div>
-          <h4>Nombre: {usuario.username}</h4>
-          <h4>Telefono: {usuario.userphone}</h4>
-          <h4>Direccion: {usuario.useraddress}</h4>
-          <h4>mail: {usuario.usermail}</h4>
-        </div>: <div><h4>no hay usuario logueado</h4></div>}
-            
-      </table>
-    )}
+        
   </div>
+  
   
   )
 };

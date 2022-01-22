@@ -30,11 +30,10 @@ const ItemDetailContainer = () => {
   }, [paramId]);
 
   return (
-    <div>
-      <div className="itemDetailContainer">
-        {loading ? <h1>LOADING</h1> : <ItemDetail product={product} />}
-      </div>
+    <div className="itemDetailContainer">
+      {loading ? <h1>LOADING</h1> : <ItemDetail product={product} />}
     </div>
+    
   );
 };
 

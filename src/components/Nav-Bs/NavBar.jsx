@@ -1,29 +1,24 @@
-import { useState, useEffect, useContext } from 'react'
+import { useState, useEffect } from 'react'
 import './NavBar.css'
 import CartWidget from "../CartWidget/CartWidget";
 import { Link } from 'react-router-dom'
-import { getCategories } from '../../products'
-import UserContext from '../../Context/userContext'
+import {db} from '../../sevices/firebase/firebase'
+import { getDocs, collection } from 'firebase/firestore';
 
 
 
 
 const NavBar = () => {
   const [categories, setCategories] = useState([])
-  const {user, logout} = useContext(UserContext)
   
   useEffect(() => {
-    getCategories().then(categories=>{
+    getDocs(collection(db, 'categories')).then((querySnapshot) => {
+      const categories = querySnapshot.docs.map(doc=>{
+        return {id:doc.id, ...doc.data()}
+      })
       setCategories(categories)
     })
   }, [])
-
-  const handleLogout=()=>{
-    logout()
-  }
-
-
-
   return (
     <div>
       <nav className="navbar navbar-expand-lg navbar-dark bg-primary">
@@ -36,15 +31,7 @@ const NavBar = () => {
               <div className="Categories">
                 {categories.map(cat => <Link key={cat.id} className='Option' to={`/category/${cat.id}`}>{cat.description}</Link>)}
               </div>
-              <div>
-                {
-                  user ?
-                  <button onClick={handleLogout} className='Option'>{user}</button>
-                  :<Link to='/login' className='Option'>Login</Link>
-                }
-                
-              </div>
-              <div className="">
+              <div className="position-absolute end-0">
                 <Link to = "/cart"><CartWidget/></Link>
               </div>
             </div>

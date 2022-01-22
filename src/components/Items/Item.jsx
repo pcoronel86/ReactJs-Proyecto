@@ -9,8 +9,8 @@ const Item = ({product}) => {
             <h5 className="productoNombre">{product.title}</h5>
             <img className="imgProducto" src={product.pictureURL}  alt={product.pictureURL}/>
                 <div className="productoCompra">    
-                <Link className="btn btn-success ml-auto comprarButton" type="button" data-toggle="modal"
-                        data-target="#comprarModal" to={`/detail/${product.id}`}>Ver Detalle</Link>
+                {product.stock === 0 ? ("Sin Sotock"): (<Link className="btn btn-success ml-auto comprarButton" type="button" data-toggle="modal"
+                        data-target="#comprarModal" to={`/detail/${product.id}`}>Ver Detalle</Link>)}
                     <p className="precio">${product.price}</p>
                 </div>
         </div>

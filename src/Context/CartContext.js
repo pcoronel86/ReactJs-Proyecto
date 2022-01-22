@@ -22,7 +22,6 @@ const CartContextProvider = ({ children }) => {
 
   const addItem = (producto, quantity) => {
     const flag = isInCart(producto);
-    console.log(flag);
     if (flag) {
       let productRepetido = cart.find((elemento) => elemento.item.id === producto.id);
       productRepetido.cantidad += quantity;
@@ -36,13 +35,11 @@ const CartContextProvider = ({ children }) => {
   };
 
   const isInCart = (item) => {
-    console.log(item);
     return cart.some((producto) => producto.item.id === item.id );
   };
 
   const removeItem = (id) => {
     const cartIndex = cart.findIndex((elemento)=> elemento.item.id === id)
-    console.log(cartIndex)
      cart.splice(
       cartIndex,
       1
@@ -52,7 +49,7 @@ const CartContextProvider = ({ children }) => {
   };
 
   const cleanCart = (id) => {
-    setCart(cart.filter((item) => item.id !== id));
+    setCart([])
   };
 
   return (
