@@ -51,10 +51,7 @@ const Cart = () => {
 
     if(outOfStock.length === 0){
       addDoc(collection(db, 'orders'), objOrder).then(({id}) =>{
-        batch.commit().then(() => {
-          console.log(id)
-          console.log('Su id de compra es:',id)
-          
+        batch.commit().then(() => { 
         }) 
       }).catch((error) =>{
         console.log("Error ejecutando la order", error);
